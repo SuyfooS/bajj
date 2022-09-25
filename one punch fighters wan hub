@@ -1,421 +1,421 @@
-    getgenv().autoPunch = false;
-    getgenv().autoRank = false;
-    getgenv().autoZone = false;
-    getgenv().autoReward = false;
-    getgenv().autoHero = false;
-    getgenv().selectEgg = false;
-    -- UI library
-    local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+getgenv().autoPunch = false;
+getgenv().autoRank = false;
+getgenv().autoZone = false;
+getgenv().autoReward = false;
+getgenv().autoHero = false;
+getgenv().selectEgg = false;
+-- UI library
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
-    local Window = OrionLib:MakeWindow({
-        Name = "WanHub",
-        HidePremium = false,
-        SaveConfig = true,
-        ConfigFolder = "WanHub",
-        IntroEnabled = true,
-        IntroText = "WanHub",
-        IntroIcon = 'https://cdn.mos.cms.futurecdn.net/ZoSDiWzgFVGqSAKhtxJtaM.jpg',
-        Icon = 'https://cdn.mos.cms.futurecdn.net/ZoSDiWzgFVGqSAKhtxJtaM.jpg'
-    })
+local Window = OrionLib:MakeWindow({
+    Name = "WanHub",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "WanHub",
+    IntroEnabled = true,
+    IntroText = "WanHub",
+    IntroIcon = 'https://cdn.mos.cms.futurecdn.net/ZoSDiWzgFVGqSAKhtxJtaM.jpg',
+    Icon = 'https://cdn.mos.cms.futurecdn.net/ZoSDiWzgFVGqSAKhtxJtaM.jpg'
+})
 
-    OrionLib:MakeNotification({
-        Name = "WanHub",
-        Content = "Thanks for using our brand new hub !",
-        Image = "rbxassetid://4483345998",
-        Time = 5
-    })
+OrionLib:MakeNotification({
+    Name = "WanHub",
+    Content = "Thanks for using our brand new hub !",
+    Image = "rbxassetid://4483345998",
+    Time = 5
+})
 
-    -- functions
-    function doPunch()
-        spawn(function()
-            while autoPunch == true do
-                local args = {
+-- functions
+function doPunch()
+    spawn(function()
+        while autoPunch == true do
+            local args = {
+                [1] = {
                     [1] = {
-                        [1] = {
-                            [1] = "\6",
-                            [2] = "Normal"
-                        }
+                        [1] = "\6",
+                        [2] = "Normal"
                     }
                 }
+            }
 
-                game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
-                wait(0.1)
-            end
-        end)
-    end
+            game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+            wait(0.1)
+        end
+    end)
+end
 
-    function doRank()
-        spawn(function()
-            while autoRank == true do
+function doRank()
+    spawn(function()
+        while autoRank == true do
+            local args = {
+                [1] = {
+                    [1] = {
+                        [1] = "\3",
+                        [2] = "RankUp"
+                    }
+                }
+            }
+
+            game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+            wait(0.5)
+        end
+    end)
+end
+
+function doZone()
+    spawn(function()
+        while autoZone == true do
+            for i = 2, 24 do
                 local args = {
                     [1] = {
                         [1] = {
                             [1] = "\3",
-                            [2] = "RankUp"
+                            [2] = "BuyWorld",
+                            [3] = "Area" .. i
                         }
                     }
                 }
 
                 game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
                 wait(0.5)
-            end
-        end)
-    end
-
-    function doZone()
-        spawn(function()
-            while autoZone == true do
-                for i = 2, 24 do
-                    local args = {
-                        [1] = {
-                            [1] = {
-                                [1] = "\3",
-                                [2] = "BuyWorld",
-                                [3] = "Area" .. i
-                            }
-                        }
-                    }
-
-                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
-                    wait(0.5)
-                    while autoZone == false do
-                        break
-                    end
+                while autoZone == false do
+                    break
                 end
             end
-        end)
-    end
-    function doHero()
-        spawn(function()
-            while autoHero == true do
+        end
+    end)
+end
+function doHero()
+    spawn(function()
+        while autoHero == true do
+            local args = {
+                [1] = {
+                    [1] = {
+                        [1] = "\7",
+                        [2] = "Summon",
+                        [3] = {
+                            ["Quanty"] = 10,
+                            ["World"] = getgenv().selectEgg
+                        }
+                    }
+                }
+            }
+            game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+            wait(0.5)
+        end
+    end)
+end
+function doReward()
+    spawn(function()
+        while autoReward == true do
+            for i = 1, 14 do
                 local args = {
                     [1] = {
                         [1] = {
-                            [1] = "\7",
-                            [2] = "Summon",
-                            [3] = {
-                                ["Quanty"] = 10,
-                                ["World"] = getgenv().selectEgg
-                            }
+                            [1] = "\3",
+                            [2] = "GetTimeReward",
+                            [3] = i
                         }
                     }
                 }
+
                 game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
                 wait(0.5)
             end
-        end)
+        end
+    end)
+end
+-- Tabs
+local FarmTab = Window:MakeTab({
+    Name = "Auto Farm",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local HeroTab = Window:MakeTab({
+    Name = "Auto Heros",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local TeleTab = Window:MakeTab({
+    Name = "Teleport",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local MiscTab = Window:MakeTab({
+    Name = "Misc.",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local SettingTab = Window:MakeTab({
+    Name = "Settings",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+-- Toggles
+FarmTab:AddToggle({
+    Name = "Auto Punch",
+    Default = false,
+    Callback = function(Value)
+        getgenv().autoPunch = Value
+        doPunch()
     end
-    function doReward()
-        spawn(function()
-            while autoReward == true do
-                for i = 1, 14 do
-                    local args = {
-                        [1] = {
-                            [1] = {
-                                [1] = "\3",
-                                [2] = "GetTimeReward",
-                                [3] = i
-                            }
-                        }
-                    }
+})
 
-                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
-                    wait(0.5)
-                end
-            end
-        end)
+FarmTab:AddToggle({
+    Name = "Auto Rank",
+    Default = false,
+    Callback = function(Value)
+        getgenv().autoRank = Value
+        doRank()
     end
-    -- Tabs
-    local FarmTab = Window:MakeTab({
-        Name = "Auto Farm",
-        Icon = "rbxassetid://4483345998",
-        PremiumOnly = false
-    })
+})
 
-    local HeroTab = Window:MakeTab({
-        Name = "Auto Heros",
-        Icon = "rbxassetid://4483345998",
-        PremiumOnly = false
-    })
+FarmTab:AddToggle({
+    Name = "Auto Buy Zones",
+    Default = false,
+    Callback = function(Value)
+        getgenv().autoZone = Value
+        doZone()
+    end
+})
 
-    local TeleTab = Window:MakeTab({
-        Name = "Teleport",
-        Icon = "rbxassetid://4483345998",
-        PremiumOnly = false
-    })
-
-    local MiscTab = Window:MakeTab({
-        Name = "Misc.",
-        Icon = "rbxassetid://4483345998",
-        PremiumOnly = false
-    })
-
-    local SettingTab = Window:MakeTab({
-        Name = "Settings",
-        Icon = "rbxassetid://4483345998",
-        PremiumOnly = false
-    })
-
-    -- Toggles
-    FarmTab:AddToggle({
-        Name = "Auto Punch",
-        Default = false,
-        Callback = function(Value)
-            getgenv().autoPunch = Value
-            doPunch()
-        end
-    })
-
-    FarmTab:AddToggle({
-        Name = "Auto Rank",
-        Default = false,
-        Callback = function(Value)
-            getgenv().autoRank = Value
-            doRank()
-        end
-    })
-
-    FarmTab:AddToggle({
-        Name = "Auto Buy Zones",
-        Default = false,
-        Callback = function(Value)
-            getgenv().autoZone = Value
-            doZone()
-        end
-    })
-
-    HeroTab:AddParagraph("Read First !",
+HeroTab:AddParagraph("Read First !",
     "Turning that on will toggle super fast summon, But you have to be close to the egg you have selected ! Otherwise it won't work !")
 
-    HeroTab:AddToggle({
-        Name = "Super Fast Hero Summon",
-        Default = false,
-        Callback = function(Value)
-            getgenv().autoHero = Value
-            doHero()
-        end
-    })
+HeroTab:AddToggle({
+    Name = "Super Fast Hero Summon",
+    Default = false,
+    Callback = function(Value)
+        getgenv().autoHero = Value
+        doHero()
+    end
+})
 
-    HeroTab:AddDropdown({
-        Name = "Select",
-        Default = "Area1",
-        Options = {"Area1", "Area5", "Area10", "Area15", "Area20", "Area25", },
-        Callback = function(Value)
-            getgenv().selectEgg = Value
-            print(getgenv().selectEgg)
-        end
-    })
+HeroTab:AddDropdown({
+    Name = "Select",
+    Default = "Area1",
+    Options = {"Area1", "Area5", "Area10", "Area15", "Area20", "Area25"},
+    Callback = function(Value)
+        getgenv().selectEgg = Value
+        print(getgenv().selectEgg)
+    end
+})
 
-    TeleTab:AddParagraph("Read First !",
-        "You can teleport to areas you did not unlock yet but you wont get the multiplier and you cant intereact with things there.")
+TeleTab:AddParagraph("Read First !",
+    "You can teleport to areas you did not unlock yet but you wont get the multiplier and you cant intereact with things there.")
 
-    TeleTab:AddButton({
-        Name = "A City",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(124.154083, 48.7294922, -363.795288, 0.188742042, 0, 0.982026696, 0, 1, 0, -0.982026696, 0,
-                    0.188742042)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "A City",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(124.154083, 48.7294922, -363.795288, 0.188742042, 0, 0.982026696, 0, 1, 0, -0.982026696, 0,
+                0.188742042)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Vaccine Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-181.129074, 48.7294922, -338.059662, 0.0101380069, 0, 0.999948621, 0, 1, 0, -0.999948621, 0,
-                    0.0101380069)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Vaccine Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-181.129074, 48.7294922, -338.059662, 0.0101380069, 0, 0.999948621, 0, 1, 0, -0.999948621, 0,
+                0.0101380069)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Giant Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-565.452393, 48.7294922, -331.59903, -0.0235111527, 0, 0.999723554, 0, 1, 0, -0.999723554, 0,
-                    -0.0235111527)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Giant Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-565.452393, 48.7294922, -331.59903, -0.0235111527, 0, 0.999723554, 0, 1, 0, -0.999723554, 0,
+                -0.0235111527)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Dream Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-1042.20972, 48.7298622, -325.392975, 0.0639038533, 0, 0.997956038, 0, 1, 0, -0.997956038, 0,
-                    0.0639038533)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Dream Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-1042.20972, 48.7298622, -325.392975, 0.0639038533, 0, 0.997956038, 0, 1, 0, -0.997956038, 0,
+                0.0639038533)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Mosquito Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-1433.90259, 48.7298622, -325.190277, 0.00756147597, 0, 0.99997139, 0, 1, 0, -0.99997139, 0,
-                    0.00756147597)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Mosquito Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-1433.90259, 48.7298622, -325.190277, 0.00756147597, 0, 0.99997139, 0, 1, 0, -0.99997139, 0,
+                0.00756147597)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Beast Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2000.90259, 48.7298622, -325.190277, 0.00756147597, 0, 0.99997139, 0, 1, 0, -0.99997139, 0,
-                    0.00756147597)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Beast Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2000.90259, 48.7298622, -325.190277, 0.00756147597, 0, 0.99997139, 0, 1, 0, -0.99997139, 0,
+                0.00756147597)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Evolution Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2268.95654, 48.7298622, -325.633698, -0.0115547581, -3.30524443e-08, 0.999933243,
-                    8.90664111e-08, 1, 3.40838611e-08, -0.999933243, 8.94542893e-08, -0.0115547581)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Evolution Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2268.95654, 48.7298622, -325.633698, -0.0115547581, -3.30524443e-08, 0.999933243,
+                8.90664111e-08, 1, 3.40838611e-08, -0.999933243, 8.94542893e-08, -0.0115547581)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Cyborg Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2420.75171, 48.7298622, -49.2565193, -0.99999994, -3.79366476e-08, -0.000422166748,
-                    -3.7924881e-08, 1, -2.78807448e-08, 0.000422166748, -2.7864731e-08, -0.99999994)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Cyborg Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2420.75171, 48.7298622, -49.2565193, -0.99999994, -3.79366476e-08, -0.000422166748,
+                -3.7924881e-08, 1, -2.78807448e-08, 0.000422166748, -2.7864731e-08, -0.99999994)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Paradisers Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2426.37793, 48.7298622, 489.568726, -0.99954927, -5.19592902e-08, 0.0300217159,
-                    -5.23114601e-08, 1, -1.09451967e-08, -0.0300217159, -1.25107436e-08, -0.99954927)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Paradisers Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2426.37793, 48.7298622, 489.568726, -0.99954927, -5.19592902e-08, 0.0300217159, -5.23114601e-08,
+                1, -1.09451967e-08, -0.0300217159, -1.25107436e-08, -0.99954927)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Sonic Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2436.16968, 48.7298622, 1070.07458, -0.999986172, -7.07983361e-08, 0.00526123913,
-                    -7.07595618e-08, 1, 7.55560947e-09, -0.00526123913, 7.18322202e-09, -0.999986172)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Sonic Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2436.16968, 48.7298622, 1070.07458, -0.999986172, -7.07983361e-08, 0.00526123913,
+                -7.07595618e-08, 1, 7.55560947e-09, -0.00526123913, 7.18322202e-09, -0.999986172)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Gym Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2423.64771, 48.7298622, 1507.27222, -0.997457027, -4.28384039e-09, 0.0712702051,
-                    -4.20531654e-09, 1, 1.25182398e-09, -0.0712702051, 9.48926826e-10, -0.997457027)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Gym Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2423.64771, 48.7298622, 1507.27222, -0.997457027, -4.28384039e-09, 0.0712702051,
+                -4.20531654e-09, 1, 1.25182398e-09, -0.0712702051, 9.48926826e-10, -0.997457027)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Snaike Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2444.42065, 48.7298622, 1930.85254, -0.99990654, -2.59154174e-08, -0.0136712296,
-                    -2.45972593e-08, 1, -9.65865041e-08, 0.0136712296, -9.62412017e-08, -0.99990654)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Snaike Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2444.42065, 48.7298622, 1930.85254, -0.99990654, -2.59154174e-08, -0.0136712296,
+                -2.45972593e-08, 1, -9.65865041e-08, 0.0136712296, -9.62412017e-08, -0.99990654)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Kombi Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2430.5603, 48.7777863, 2302.79175, -0.999808192, -1.23462032e-08, -0.019584883,
-                    -1.19870665e-08, 1, -1.84548288e-08, 0.019584883, -1.82165234e-08, -0.999808192)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Kombi Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2430.5603, 48.7777863, 2302.79175, -0.999808192, -1.23462032e-08, -0.019584883, -1.19870665e-08,
+                1, -1.84548288e-08, 0.019584883, -1.82165234e-08, -0.999808192)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Meteor Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2396.76343, 48.7298622, 2768.49512, -0.999998391, 2.79342984e-08, -0.00177907385,
-                    2.79646155e-08, 1, -1.70164203e-08, 0.00177907385, -1.70661441e-08, -0.999998391)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Meteor Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2396.76343, 48.7298622, 2768.49512, -0.999998391, 2.79342984e-08, -0.00177907385,
+                2.79646155e-08, 1, -1.70164203e-08, 0.00177907385, -1.70661441e-08, -0.999998391)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Sea Invasion Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-2149.89282, 49.4292336, 3051.09131, -0.08861541, -6.59912729e-08, -0.996065915,
-                    7.17439974e-08, 1, -7.26346485e-08, 0.996065915, -7.78983065e-08, -0.08861541)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Sea Invasion Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-2149.89282, 49.4292336, 3051.09131, -0.08861541, -6.59912729e-08, -0.996065915, 7.17439974e-08,
+                1, -7.26346485e-08, 0.996065915, -7.78983065e-08, -0.08861541)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Sea King Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-1807.71899, 48.7298622, 3040.17358, 0.00362638757, -6.7470558e-09, -0.999993443,
-                    -3.25776348e-08, 1, -6.86524038e-09, 0.999993443, 3.26023155e-08, 0.00362638757)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Sea King Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-1807.71899, 48.7298622, 3040.17358, 0.00362638757, -6.7470558e-09, -0.999993443,
+                -3.25776348e-08, 1, -6.86524038e-09, 0.999993443, 3.26023155e-08, 0.00362638757)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Fang Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-1367.99609, 48.7298622, 3027.86572, -0.0556912161, 3.02975636e-08, -0.998448014,
-                    -2.82443189e-08, 1, 3.1920063e-08, 0.998448014, 2.99781533e-08, -0.0556912161)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Fang Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-1367.99609, 48.7298622, 3027.86572, -0.0556912161, 3.02975636e-08, -0.998448014,
+                -2.82443189e-08, 1, 3.1920063e-08, 0.998448014, 2.99781533e-08, -0.0556912161)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Megazord Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-935.849548, 48.7298622, 3042.72925, -0.0478085354, 2.17117635e-09, -0.998856544,
-                    1.51296486e-08, 1, 1.44950763e-09, 0.998856544, -1.50430495e-08, -0.0478085354)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Megazord Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-935.849548, 48.7298622, 3042.72925, -0.0478085354, 2.17117635e-09, -0.998856544, 1.51296486e-08,
+                1, 1.44950763e-09, 0.998856544, -1.50430495e-08, -0.0478085354)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Grojira Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-436.939148, 48.7298622, 3037.31909, 0.0190834347, -5.08638962e-08, -0.999817908,
-                    -9.53070725e-08, 1, -5.2692279e-08, 0.999817908, 9.62952669e-08, 0.0190834347)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Grojira Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-436.939148, 48.7298622, 3037.31909, 0.0190834347, -5.08638962e-08, -0.999817908,
+                -9.53070725e-08, 1, -5.2692279e-08, 0.999817908, 9.62952669e-08, 0.0190834347)
+        ACity()
+    end
+})
 
-    TeleTab:AddButton({
-        Name = "Girinoshop Zone",
-        Callback = function(ACity)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                CFrame.new(-49.8928185, 48.7298737, 3051.09131, -0.08861541, 2.69873581e-08, -0.996065915,
-                    -5.53442874e-08, 1, 3.20176738e-08, 0.996065915, 5.79638204e-08, -0.08861541)
-            ACity()
-        end
-    })
+TeleTab:AddButton({
+    Name = "Girinoshop Zone",
+    Callback = function(ACity)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(-49.8928185, 48.7298737, 3051.09131, -0.08861541, 2.69873581e-08, -0.996065915, -5.53442874e-08,
+                1, 3.20176738e-08, 0.996065915, 5.79638204e-08, -0.08861541)
+        ACity()
+    end
+})
 
-    MiscTab:AddToggle({
-        Name = "Auto Open Time Rewards",
-        Default = false,
-        Callback = function(Value)
-            getgenv().autoReward = Value
-            doReward()
-        end
-    })
+MiscTab:AddToggle({
+    Name = "Auto Open Time Rewards",
+    Default = false,
+    Callback = function(Value)
+        getgenv().autoReward = Value
+        doReward()
+    end
+})
 
-    OrionLib:Init()
+OrionLib:Init()
