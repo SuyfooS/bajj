@@ -1,0 +1,350 @@
+getgenv().autoFarm = false;
+        getgenv().autoLeveling = false;
+        getgenv().autoChest = false;
+        getgenv().selectChest = false;
+        getgenv().autoUpgrade = false;
+        getgenv().selectHero = false;
+        getgenv().buySkill = false;
+        getgenv().selectBuySkill = false;
+        getgenv().autoHire = false;
+
+        local client = game.Players.LocalPlayer
+        local attackEvent = game:GetService("ReplicatedStorage").Packages["_Index"]["sleitnick_knit@1.4.7"].knit
+                                .Services.WeaponService.RE.Swing
+
+        local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+        local Window = OrionLib:MakeWindow({
+            Name = "WanHub",
+            HidePremium = false,
+            SaveConfig = true,
+            ConfigFolder = "WanHub",
+            IntoEnabled = true,
+            IntroText = "WanHub",
+            IntoIcon = 'https://static.wikia.nocookie.net/cyberpunk/images/1/19/Rebecca_Infobox_CPEDGE.png'
+        })
+
+        -- functions
+
+        local Utils = {}
+        do
+            function Utils.GetPlate()
+                for _, plate in next, workspace:WaitForChild("Plots"):GetChildren() do
+                    if plate.Owner.Value == client then
+                        return plate.Name
+                    end
+                end
+            end
+
+            function Utils.EnemyName()
+                for _, enemy in next, workspace:WaitForChild("Plots")[Utils.GetPlate()].Enemy:GetChildren() do
+                    if enemy and enemy:IsA("BasePart") then
+                        return enemy.Name
+                    end
+                end
+            end
+
+            function Utils.EnemyAttack()
+                local enemyPlot = Utils.GetPlate()
+                local enemyName = Utils.EnemyName()
+
+                if enemyPlot and enemyName then
+                    attackEvent:FireServer(workspace.Plots[enemyPlot].Enemy[enemyName])
+                end
+            end
+
+            function Utils.IsPlayerAlive()
+                local humanoid = client.Character and client.Character.Humanoid
+                local root = client.Character and client.Character:WaitForChild("HumanoidRootPart", 5)
+
+                if root and (humanoid and humanoid.Health > 0) then
+                    return true
+                end
+            end
+
+            function Utils.Teleport(part)
+                if part and Utils.IsPlayerAlive() then
+                    client.Character.PrimaryPart:PivotTo(part)
+                end
+            end
+
+            function Utils.GetEnemyLocation()
+                for _, enemy in next, workspace:WaitForChild("Plots")[Utils.GetPlate()].Enemy:GetChildren() do
+                    if enemy and enemy:IsA("BasePart") then
+                        return enemy.CFrame * CFrame.new(0, 0, -5)
+                    end
+                end
+            end
+
+            function Utils.Farm()
+                Utils.Teleport(Utils.GetEnemyLocation())
+                do
+                    Utils.EnemyAttack()
+                end
+            end
+        end
+
+        function Utils.CanLevel()
+            for _, button in next, workspace:WaitForChild("Plots")[Utils.GetPlate()].Buttons:GetChildren() do
+                local levelButton = string.find(button.Name, "NextLevel")
+                if levelButton then
+                    return true
+                end
+            end
+        end
+
+        function Utils.LevelPosition()
+            if Utils.IsPlayerAlive() and Utils.CanLevel() then
+                for _, level in next, workspace:WaitForChild("Plots")[Utils.GetPlate()].Buttons.NextLevel:GetChildren() do
+                    if level:IsA("Part") and level.Name:find("Touch") then
+                        return level.CFrame
+                    end
+                end
+            end
+        end
+
+        function Utils.AutoLevel()
+            if Utils.IsPlayerAlive() and Utils.CanLevel() then
+                for _, level in next, workspace:WaitForChild("Plots")[Utils.GetPlate()].Buttons.NextLevel:GetChildren() do
+                    local touch = string.find(level.Name, "Touch")
+                    if touch then
+                        Utils.Teleport(Utils.LevelPosition())
+                    end
+                end
+            end
+        end
+
+        function doFarm()
+            spawn(function()
+                while autoFarm == true do
+                    Utils.Farm()
+                    wait()
+                end
+            end)
+        end
+
+        function doUpgrade()
+            spawn(function()
+                while autoUpgrade == true do
+                    local args = {
+                        [1] = getgenv().selectHero,
+                        [2] = 0
+                    }
+
+                    game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("sleitnick_knit@1.4.7").knit
+                        .Services.HeroService.RF.BuyLevel:InvokeServer(unpack(args))
+                    wait()
+                end
+            end)
+        end
+
+        function doHire()
+            spawn(function()
+                while autoHire == true do
+                    local HireHeros = {"Apprentice Chef", "Bounty Hunter", "Wandering Fisherman", "Assassin Zero",
+                                       "Ice Wizard", "Pig King", "Masked Samurai", "Sun God", "Forest Doctor",
+                                       "Old Master", "RobotOverlord", "Skeleton King", "Godess of Light", "Magma Mage",
+                                       "Blade Queen", "Lost Soul", "The Champion", "Ice Cube", "Mad Scientist",
+                                       "Dark Warlock"}
+                    for i, v in pairs(HireHeros) do
+                    local args = {
+                        [1] = v
+                    }
+
+                    game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("sleitnick_knit@1.4.7").knit
+                        .Services.HeroService.RE.HireHero:FireServer(unpack(args))
+                    wait()
+                end
+            end
+        end)
+    end
+
+        function doSkill()
+            spawn(function()
+                while buySkill == true do
+                    for i = "Rabid Animals!", "Mushroom Stew!", "infinite" do
+                        local args = {
+                            [1] = getgenv().selectBuySkill,
+                            [2] = i
+                        }
+
+                        game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("sleitnick_knit@1.4.7").knit
+                            .Services.HeroService.RF.LearnSkill:InvokeServer(unpack(args))
+                        wait()
+                    end
+                end
+            end)
+        end
+        function doChest()
+            spawn(function()
+                while autoChest == true do
+                    local args = {
+                        [1] = getgenv().selectChest
+                    }
+
+                    game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("sleitnick_knit@1.4.7").knit
+                        .Services.ChestService.RF.BuyChest:InvokeServer(unpack(args))
+                    wait()
+                end
+            end)
+        end
+
+        -- Tabs
+
+        local FarmTab = Window:MakeTab({
+            Name = "Auto Farm",
+            Icon = "rbxassetid://4483345998",
+            PremiumOnly = false
+        })
+
+        local HeroTab = Window:MakeTab({
+            Name = "Heros",
+            Icon = "rbxassetid://4483345998",
+            PremiumOnly = false
+        })
+
+        local ChestTab = Window:MakeTab({
+            Name = "Auto Chests",
+            Icon = "rbxassetid://4483345998",
+            PremiumOnly = false
+        })
+
+        local TeleTab = Window:MakeTab({
+            Name = "Teleport",
+            Icon = "rbxassetid://4483345998",
+            PremiumOnly = false
+        })
+
+        local CreditTab = Window:MakeTab({
+            Name = "Credits!",
+            Icon = "rbxassetid://4483345998",
+            PremiumOnly = false
+        })
+
+        -- Toggles
+
+        FarmTab:AddToggle({
+            Name = "Auto Kill Mobs",
+            Default = false,
+            Callback = function(Value)
+                getgenv().autoFarm = Value
+                print(Value)
+                while autoFarm == true do
+                    repeat
+                        Utils.Farm()
+                        wait()
+                    until autoFarm == false
+                end
+            end
+        })
+
+        FarmTab:AddToggle({
+            Name = "Auto Level",
+            Default = false,
+            Callback = function(Value)
+                getgenv().autoLeveling = Value
+                print(Value)
+                while autoLeveling == true do
+                    repeat
+                        Utils.AutoLevel()
+                        wait()
+                    until autoLeveling == false
+                end
+            end
+        })
+
+        HeroTab:AddToggle({
+            Name = "Upgrade A Specific Hero",
+            Default = false,
+            Callback = function(Value)
+                getgenv().autoUpgrade = Value
+                doUpgrade()
+            end
+        })
+
+        HeroTab:AddDropdown({
+            Name = "Select Hero",
+            Default = "Apprentice Chef",
+            Options = {"Apprentice Chef", "Bounty Hunter", "Wandering Fisherman", "Assassin Zero", "Ice Wizard",
+                       "Pig King", "Masked Samurai", "Sun God", "Forest Doctor", "Old Master", "RobotOverlord",
+                       "Skeleton King", "Godess of Light", "Magma Mage", "Blade Queen", "Lost Soul", "The Champion",
+                       "Ice Cube", "Mad Scientist", "Dark Warlock"},
+            Callback = function(Value)
+                getgenv().selectHero = Value
+                print(getgenv().selectHero)
+            end
+        })
+
+        HeroTab:AddParagraph("READ !",
+            "I Do not recommend using Auto Hire Heros ! Its really laggy at the moment !, Its not our problem its the game !")
+
+        HeroTab:AddToggle({
+            Name = "Auto Hire Heros",
+            Default = false,
+            Callback = function(Value)
+                getgenv().autoHire = Value
+                doHire()
+            end
+        })
+
+        ChestTab:AddToggle({
+            Name = "Auto Open Chest",
+            Default = false,
+            Callback = function(Value)
+                getgenv().autoChest = Value
+                doChest()
+            end
+        })
+
+        ChestTab:AddDropdown({
+            Name = "Select Chest",
+            Default = "Wooden",
+            Options = {"Wooden", "Silver", "Golden", "Legendary"},
+            Callback = function(Value)
+                getgenv().selectChest = Value
+                print(getgenv().selectChest)
+            end
+        })
+
+        TeleTab:AddButton({
+            Name = "Hiring Place",
+            Callback = function()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-1882.73376, 56.8861847, -91.9317474, -0.195493892, -1.21081181e-08, -0.980704904,
+                        8.21505424e-08, 1, -2.87222459e-08, 0.980704904, -8.61804637e-08, -0.195493892)
+            end
+        })
+
+        TeleTab:AddButton({
+            Name = "Daily Chests",
+            Callback = function()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-1964.36853, 54.0196457, -153.456284, 0.827739418, -3.01070968e-09, -0.561112702,
+                        2.24268941e-08, 1, 2.77179879e-08, 0.561112702, -3.5527286e-08, 0.827739418)
+            end
+        })
+
+        TeleTab:AddButton({
+            Name = "Reincarnate Place",
+            Callback = function()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-2040.61475, 54.5485687, -26.5429916, -0.786888361, -3.6774864e-08, 0.617095351,
+                        -5.96189338e-08, 1, -1.64295155e-08, -0.617095351, -4.97187607e-08, -0.786888361)
+            end
+        })
+
+        CreditTab:AddParagraph("Our discord !", "Join our discord for updates and some other cool stuffs ;)")
+
+        CreditTab:AddButton({
+            Name = "Click to join our discord :)",
+            Callback = function()
+                setclipboard('https://discord.gg/NDVKretth6')
+                OrionLib:MakeNotification({
+                    Name = "Our discord !",
+                    Content = "The link of our discord has been copied to your clipboard",
+                    Image = "rbxassetid://11084861052",
+                    Time = 5
+                })
+            end
+        })
+
+    end
