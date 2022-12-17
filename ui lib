@@ -39,7 +39,7 @@ local RayfieldLibrary = {
 			SelectedTabTextColor = Color3.fromRGB(106, 13, 173),
 
 			ElementBackground = Color3.fromRGB(35, 35, 35),
-			ElementBackgroundHover = Color3.fromRGB(40, 40, 40),
+			ElementBackgroundHover = Color3.fromRGB(106, 13, 173),
 			SecondaryElementBackground = Color3.fromRGB(106, 13, 173), -- For labels and paragraphs
 			ElementStroke = Color3.fromRGB(106, 13, 173),
 			SecondaryElementStroke = Color3.fromRGB(116, 23, 213), -- For labels and paragraphs
@@ -2295,7 +2295,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 				end)
 			end
 			Slider.Main.BackgroundColor3 = SelectedTheme.SliderBackground
-			Slider.Main.UIStroke.Color = (106, 13, 173)
+			Slider.Main.UIStroke.Color = SelectedTheme.SliderStroke
 			Slider.Main.Progress.BackgroundColor3 = SelectedTheme.SliderProgress
 
 			TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
